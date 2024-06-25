@@ -44,12 +44,12 @@ To run Wordle Clone locally, follow these steps:
    
 3.Install dependencies:
 
-    ```sh
+    ```bash
     npm install
     ```
 4.Start the development server:
 
-    ```sh
+    ```bash
     npm start
     ```
 5.Open your browser and visit http://localhost:3000 to view the game.
