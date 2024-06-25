@@ -34,21 +34,22 @@ Wordle Clone is a web-based game inspired by the popular game Wordle. The object
 To run Wordle Clone locally, follow these steps:
 
 1. Clone the repository:
-   ```bash 
+   ```sh 
    git clone https://github.com/chirakak/wordle-clone.git
-   '''
+   ```
 2.Navigate into the project directory:
-  
+   ```sh
    cd wordle-clone
+   ```
    
 3.Install dependencies:
-    '''bash
+    ```sh
     npm install
-    '''
+    ```
 4.Start the development server:
-    '''bash
+    ```sh
     npm start
-    '''
+    ```
 5.Open your browser and visit http://localhost:3000 to view the game.
 
 ## Usage
