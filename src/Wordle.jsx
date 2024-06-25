@@ -284,7 +284,7 @@ const Wordle = () => {
       {hintMessage && <div className="hint-message">{hintMessage}</div>}
       <div className="grid">
         {guesses.map((guess, i) => (
-          <div className="row" key={i}>
+          <div className="row current-guess" key={i}>
             {Array.from({ length: WORD_LENGTH }).map((_, j) => (
               <motion.div
                 className="cell"

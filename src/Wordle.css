@@ -23,7 +23,8 @@ body {
 }
 
 .hint-button, .retry-button {
-  padding: 10px 15px;
+  padding: 10px 12px;
+  margin: 3px;
   font-size: 16px;
   cursor: pointer;
   background-color: #4CAF50;
@@ -225,6 +226,15 @@ body {
 .start-game-button:hover {
   background-color: #45a049;
 }
+
+.row.current-guess .cell {
+  border: 2px solid #915799; /* Default border color */
+}
+
+.row.current-guess .cell:not(:empty) {
+  border-color: #915799; /* Border color for cells with letters */
+}
+
 /* Tablet Styles */
 @media screen and (max-width: 768px) {
   .title {
