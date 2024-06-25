@@ -16,14 +16,47 @@ const keyboardColors = [
   '#FFFF00', '#CCFF00', '#99FF00', '#66FF00', '#33FF00'
 ];
 
+const Instructions = ({ onClose }) => {
+  return (
+    <div className="instructions-modal">
+      <h2>How to Not Lose at Wordle</h2>
+      <ul>
+        <li>You've got 6 tries to guess a 5-letter word. No pressure!</li>
+        <li>Each guess must be a valid word. Sorry, "QWERT" fans.</li>
+        <li>After each guess, the color-coded feedback will be your new best friend:</li>
+      </ul>
+      <div className="color-examples">
+        <div className="example-row">
+          <span className="example correct"></span>
+          <p>Green: You nailed it! This letter is in the right spot. Do a little dance!</p>
+        </div>
+        <div className="example-row">
+          <span className="example present"></span>
+          <p>Yellow: Close, but no cigar. Right letter, wrong spot. It's like finding your keys in the fridge.</p>
+        </div>
+        <div className="example-row">
+          <span className="example absent"></span>
+          <p>Gray: Nope, not even close. This letter is taking a vacation from your word.</p>
+        </div>
+      </div>
+      <p>Stuck? Use the hint button! But choose wisely, you only get 2 per game. Use them like your last two brain cells.</p>
+      <button className="close-instructions" onClick={onClose}>Let's Wordle!</button>
+    </div>
+  );
+};
+
 const Wordle = () => {
+  const [gameStarted, setGameStarted] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(true);
   const [wordSet, setWordSet] = useState(new Set());
   const [correctWord, setCorrectWord] = useState('');
   const [guesses, setGuesses] = useState(Array(MAX_GUESSES).fill(''));
   const [currentGuess, setCurrentGuess] = useState('');
   const [gameOver, setGameOver] = useState(false);
   const [loading, setLoading] = useState(true);
-
+  const [gameKey, setGameKey] = useState(0);
+  const [hintsRemaining, setHintsRemaining] = useState(2);
+  const [hintMessage, setHintMessage] = useState('');
   const [isSoundOn, setIsSoundOn] = useState(false);
   const audioContextRef = useRef(null);
   const audioBuffersRef = useRef({});
@@ -76,16 +109,22 @@ const Wordle = () => {
   }, [isSoundOn]);
 
   useEffect(() => {
-    const fetchWord = async () => {
-      setLoading(true);
-      const { wordSet, todaysWord } = await generateWordSet();
-      setWordSet(wordSet);
-      setCorrectWord(todaysWord);
-      setLoading(false);
-    };
-
     fetchWord();
-  }, []);
+  }, []); // Empty dependency array means this runs once when the component mounts
+  
+  const fetchWord = async () => {
+    setLoading(true);
+    const { wordSet, todaysWord } = await generateWordSet();
+    setWordSet(wordSet);
+    setCorrectWord(todaysWord);
+    setLoading(false);
+  };
+
+  const startGame = () => {
+    setGameStarted(true);
+    setShowInstructions(false);
+    fetchWord();
+  };
 
   const handleKeyPress = useCallback((key) => {
     if (gameOver || loading) return;
@@ -187,16 +226,62 @@ const Wordle = () => {
     setIsSoundOn(!isSoundOn);
   };
 
+  const getHint = () => {
+    if (hintsRemaining > 0 && !gameOver) {
+      let hintIndex;
+      do {
+        hintIndex = Math.floor(Math.random() * WORD_LENGTH);
+      } while (currentGuess[hintIndex] === correctWord[hintIndex]);
+
+      const positions = ['1st', '2nd', '3rd', '4th', '5th'];
+      const hintText = `The ${positions[hintIndex]} letter is ${correctWord[hintIndex]}`;
+      setHintMessage(hintText);
+      setHintsRemaining(prev => prev - 1);
+    }
+  };
+
+  const resetGame = () => {
+    setGameKey(prev => prev + 1);
+    setGuesses(Array(MAX_GUESSES).fill(''));
+    setCurrentGuess('');
+    setGameOver(false);
+    setHintsRemaining(2);
+    setHintMessage('');
+    fetchWord();
+  };
+  
   if (loading) {
     return <div className="container"><h1 className="title">Loading...</h1></div>;
   }
 
+  if (!gameStarted) {
+    return (
+      <div className="container">
+        <h1 className="title">Wordle Clone</h1>
+        {showInstructions ? (
+          <Instructions onClose={() => setShowInstructions(false)} />
+        ) : (
+          <button className="start-game-button" onClick={startGame}>Start Wordle</button>
+        )}
+      </div>
+    );
+  }
+
   return (
-    <div className="container">
+    <div className="container" key={gameKey}>
       <h1 className="title">Wordle Clone</h1>
-      <button className="sound-toggle" onClick={toggleSound}>
-        {isSoundOn ? '🔊' : '🔇'}
-      </button>
+      <div className="game-controls">
+        <button className="sound-toggle" onClick={toggleSound}>
+          {isSoundOn ? '🔊' : '🔇'}
+        </button>
+        <button className="hint-button" onClick={getHint} disabled={hintsRemaining === 0 || gameOver}>
+          💡 Hint ({hintsRemaining})
+        </button>
+        <button className="retry-button" onClick={resetGame}>
+          🔄 Play Again
+        </button>
+      </div>
+      {hintMessage && <div className="hint-message">{hintMessage}</div>}
       <div className="grid">
         {guesses.map((guess, i) => (
           <div className="row" key={i}>

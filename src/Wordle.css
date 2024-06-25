@@ -6,6 +6,41 @@ body {
   font-family: 'Arial', sans-serif;
   background-color: #121213;
 }
+.hint-message {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+  text-align: center;
+  font-weight: bold;
+  color: #333;
+}
+
+.game-controls {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.hint-button, .retry-button {
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.hint-button:hover, .retry-button:hover {
+  background-color: #45a049;
+}
+
+.hint-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
 .sound-toggle {
   position: absolute;
   top: 1rem;
@@ -96,7 +131,100 @@ body {
   font-size: 0.8rem;
   padding: 5px;
 }
+.instructions-modal {
+  background-color: #121213;
+  color: white;
+  padding: 30px;
+  border-radius: 10px;
+  max-width: 90%;
+  max-height: 90%;
+  overflow-y: auto;
+  margin: 0 auto;
+}
 
+.instructions-modal h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+.instructions-modal ul {
+  padding-left: 20px;
+  margin-bottom: 20px;
+}
+
+.instructions-modal li {
+  margin-bottom: 15px;
+  font-size: 16px;
+}
+
+.color-examples {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.example-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.example {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 5px;
+}
+
+.example-row p {
+  margin: 0;
+  font-size: 16px;
+}
+
+.correct {
+  background-color: #6aaa64;
+}
+
+.present {
+  background-color: #c9b458;
+}
+
+.absent {
+  background-color: #3a3a3c;
+}
+
+.close-instructions {
+  display: block;
+  margin: 20px auto 0;
+  padding: 12px 24px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: background-color 0.3s;
+}
+
+.close-instructions:hover {
+  background-color: #45a049;
+}
+.start-game-button {
+  padding: 15px 30px;
+  font-size: 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.start-game-button:hover {
+  background-color: #45a049;
+}
 /* Tablet Styles */
 @media screen and (max-width: 768px) {
   .title {
