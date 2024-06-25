@@ -58,7 +58,6 @@ To run Wordle Clone locally, follow these steps:
 - **Objective**: Guess the hidden five-letter word within six attempts.
 - **Input**:
   - Use the on-screen keyboard or your physical keyboard to input guesses.
-  - Letter keys: QWERTYUIOP, ASDFGHJKL, ZXCVBNM.
   - Enter: Submit your guess.
   - Backspace: Delete the last letter.
 - **Feedback**:
