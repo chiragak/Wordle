@@ -61,6 +61,8 @@ const Wordle = () => {
   const audioContextRef = useRef(null);
   const audioBuffersRef = useRef({});
   const gameplaySourceRef = useRef(null);
+  const [timeLeft, setTimeLeft] = useState(300); // 5 minutes in seconds
+  const [timerActive, setTimerActive] = useState(false);
 
   useEffect(() => {
     const initAudio = async () => {
@@ -110,7 +112,25 @@ const Wordle = () => {
 
   useEffect(() => {
     fetchWord();
-  }, []); // Empty dependency array means this runs once when the component mounts
+  }, []);
+
+  useEffect(() => {
+    let timer;
+    if (timerActive && timeLeft > 0) {
+      timer = setInterval(() => {
+        setTimeLeft((prevTime) => prevTime - 1);
+      }, 1000);
+    } else if (timeLeft === 0) {
+      setGameOver(true);
+      if (gameplaySourceRef.current) {
+        gameplaySourceRef.current.stop();
+        gameplaySourceRef.current = null;
+      }
+      playSound('gameover');
+      alert(`Time's up! The word was ${correctWord}`);
+    }
+    return () => clearInterval(timer);
+  }, [timerActive, timeLeft, correctWord]);
   
   const fetchWord = async () => {
     setLoading(true);
@@ -124,6 +144,7 @@ const Wordle = () => {
     setGameStarted(true);
     setShowInstructions(false);
     fetchWord();
+    setTimerActive(true);
   };
 
   const handleKeyPress = useCallback((key) => {
@@ -143,6 +164,7 @@ const Wordle = () => {
 
       if (currentGuess.toUpperCase() === correctWord) {
         setGameOver(true);
+        setTimerActive(false);
         triggerConfetti();
         if (gameplaySourceRef.current) {
           gameplaySourceRef.current.stop();
@@ -152,6 +174,7 @@ const Wordle = () => {
         alert('You won!');
       } else if (newGuesses[MAX_GUESSES - 1] !== '') {
         setGameOver(true);
+        setTimerActive(false);
         if (gameplaySourceRef.current) {
           gameplaySourceRef.current.stop();
           gameplaySourceRef.current = null;
@@ -247,7 +270,15 @@ const Wordle = () => {
     setGameOver(false);
     setHintsRemaining(2);
     setHintMessage('');
+    setTimeLeft(300); // Reset to 5 minutes
+    setTimerActive(true);
     fetchWord();
+  };
+
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
   };
   
   if (loading) {
@@ -270,6 +301,7 @@ const Wordle = () => {
   return (
     <div className="container" key={gameKey}>
       <h1 className="title">Wordle Clone</h1>
+      <div className="timer">{formatTime(timeLeft)}</div>
       <div className="game-controls">
         <button className="sound-toggle" onClick={toggleSound}>
           {isSoundOn ? '🔊' : '🔇'}

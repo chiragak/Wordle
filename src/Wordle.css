@@ -61,7 +61,6 @@ body {
   align-items: center;
   color: white;
   min-height: 100vh;
-  padding: 20px;
 }
 
 .title {
@@ -239,7 +238,7 @@ body {
 /* Tablet Styles */
 @media screen and (max-width: 768px) {
   .title {
-    font-size: 2rem;
+    font-size: 1rem;
   }
 
   .cell {
@@ -254,6 +253,12 @@ body {
   }
 }
 
+.timer {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #fff;
+}
 /* Mobile Styles */
 @media screen and (max-width: 480px) {
   .container {
